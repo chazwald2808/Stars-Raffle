@@ -33,6 +33,7 @@
   <div id="players"></div>
   <button onclick="addPlayer()">Add Player</button>
   <button onclick="selectWinner()">Select Winner</button>
+  <button onclick="clearAllFields()">Clear All Fields</button>
   <h3 id="winner"></h3>
   <div id="draw-area"></div>
 
@@ -65,10 +66,17 @@
         <input type="text" placeholder="Player Name" value="${name}" />
         <input type="number" placeholder="Stars" min="0" value="${stars}" oninput="updateTickets(this)" />
         <input type="text" placeholder="Tickets" readonly />
+        <button onclick="removePlayer(this)">❌</button>
       `;
       playersContainer.appendChild(div);
       updateTickets(div.querySelector('input[type=number]'));
       setUpInputListeners(div);
+    }
+
+    function removePlayer(button) {
+      const row = button.parentElement;
+      row.remove();
+      savePlayers();
     }
 
     function setUpInputListeners(div) {
@@ -85,6 +93,18 @@
       const ticketBox = starInput.nextElementSibling;
       ticketBox.value = !isNaN(stars) && stars >= 0 ? Math.floor(stars / 10) : '';
     }
+    function clearAllFields() {
+      document.querySelectorAll('.player-entry').forEach(div => {
+        const nameInput = div.querySelector('input[type=text]');
+        const starInput = div.querySelector('input[type=number]');
+        const ticketOutput = div.querySelector('input[readonly]');
+        nameInput.value = '';
+        starInput.value = '';
+        ticketOutput.value = '';
+      });
+      savePlayers();
+    }
+
 
     function selectWinner() {
       const entries = [];
